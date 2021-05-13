@@ -1,12 +1,11 @@
 const inquirer = require('inquirer');
-const engineer = require('./lib/Engineer');
-const intern = require('./lib/Intern');
-const manager = require('./lib/Manager');
+const {Engineer, engineerQuest} = require('./lib/Engineer');
+const {Intern, internQuest} = require('./lib/Intern');
+const {Manager, managerQuest} = require('./lib/Manager');
 const fs = require('fs');
-const cardTemplate = require('./src/cardTemplate');
 const htmlTemplate = require('./src/html');
 
-
+var allMembers = [];
 
 function buildTeam() {
     console.log('Please input team member information: ');
@@ -21,29 +20,29 @@ function buildTeam() {
     .then(answers => {
         switch (answers.role) {
             case 'Engineer':
-                inquirer.prompt().then(engiAnswers => {
-                    const engiData = new engineer(answers.name, answers.id, answers.email, engiAnswers.github)
+                inquirer.prompt(engineerQuest).then(engiAnswers => {
+                    const engiData = new Engineer(engiAnswers.name, engiAnswers.id, engiAnswers.email, engiAnswers.github)
+                    console.log(engiData);
+                    allMembers.push(engiData);
+                    newMember();
                 });
-                console.log(engiData);
-                cardTemplate(engiData);
-                newMember();
-
+                break;
             case 'Intern':
-                inquirer.prompt().then(internAnswers => {
-                    const internData = new engineer(answers.name, answers.id, answers.email, internAnswers.school)
-                })
-                console.log(internData);
-                cardTemplate(internData);
-                newMember();
-
+                inquirer.prompt(internQuest).then(internAnswers => {
+                    const internData = new Intern(internAnswers.name, internAnswers.id, internAnswers.email, internAnswers.school)
+                    console.log(internData);
+                    allMembers.push(internData);
+                    newMember();
+                });
+                break;
             case 'Manager':
-                inquirer.prompt().then(manaAnswers => {
-                    const manaData = new engineer(answers.name, answers.id, answers.email, manaAnswers.officeNum)
-                })
-                console.log(manaData);
-                cardTemplate(manaData);
-                newMember();
-
+                inquirer.prompt(managerQuest).then(manaAnswers => {
+                    const manaData = new Manager(manaAnswers.name, manaAnswers.id, manaAnswers.email, manaAnswers.officeNum)
+                    console.log(manaData);
+                    allMembers.push(manaData);
+                    newMember();
+                });
+                break;
         }
     })
     .catch(err => {
@@ -55,22 +54,26 @@ function newMember() {
     inquirer.prompt(
         {
             type: 'confirm',
-            message: `Would you like to add a team member?`,
+            message: `Would you like to add another team member?`,
             name: 'newMember'
         }
     )
-    .then(newMember => {
-        if (newMember) {
+    .then(answer => {
+        if (answer.newMember) {
             buildTeam();
         } else {
-            createHTML();
-        }
+            createHTML(allMembers);
+        };
     });
 };
 
-function createHTML() {
+function createHTML(allMembers) {
+    fs.writeFile('./dist/index.html', htmlTemplate(allMembers), err => {
+        if (err) return console.log(err);
+    });
 
-}
+    console.log('HTML created!');
+};
 
 
-// buildTeam();
+buildTeam();

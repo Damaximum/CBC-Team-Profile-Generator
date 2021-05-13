@@ -1,4 +1,8 @@
-function htmlTemplate() {
+const cardTemplate = require('./cardTemplate');
+
+
+
+function htmlTemplate(teamMembers) {
     let template = `
     <!DOCTYPE html>
 
@@ -68,7 +72,7 @@ function htmlTemplate() {
             </ul>
         </header>
         <div class="row">
-
+            ${teamMembers.map(member => cardTemplate(member))}
         </div>
     </div>
 
