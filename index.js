@@ -7,6 +7,19 @@ const htmlTemplate = require('./src/html');
 
 var allMembers = [];
 
+function makeManager() {
+    console.log('Please enter Manager information');
+    inquirer.prompt(managerQuest).then(manaAnswers => {
+        const manaData = new Manager(manaAnswers.name, manaAnswers.id, manaAnswers.email, manaAnswers.special)
+        manaData.icon = '<i class="far fa-chart-bar fa-2x"></i>';
+        manaData.special = `Office Number: ${manaData.special}`;
+        manaData.role = 'Manager';
+        console.log(manaData);
+        allMembers.push(manaData);
+        buildTeam();
+    });
+}
+
 function buildTeam() {
     console.log('Please input team member information: ');
     inquirer.prompt(
@@ -14,7 +27,7 @@ function buildTeam() {
             type: 'list',
             message: `What is the employee's role/job title?`,
             name: 'role',
-            choices: [`Engineer`, `Intern`, `Manager`]
+            choices: [`Engineer`, `Intern`]
         }
     )
     .then(answers => {
@@ -23,7 +36,7 @@ function buildTeam() {
                 inquirer.prompt(engineerQuest).then(engiAnswers => {
                     const engiData = new Engineer(engiAnswers.name, engiAnswers.id, engiAnswers.email, engiAnswers.special)
                     engiData.icon = '<i class="fas fa-glasses fa-2x"></i>';
-                    engiData.special = `Github: ${engiAnswers.special}`;
+                    engiData.special = `<a href='${engiAnswers.special}' > Github: ${engiAnswers.special} </a>`;
                     engiData.role = answers.role;
                     console.log(engiData);
                     allMembers.push(engiData);
@@ -38,17 +51,6 @@ function buildTeam() {
                     internData.role = answers.role;
                     console.log(internData);
                     allMembers.push(internData);
-                    newMember();
-                });
-                break;
-            case 'Manager':
-                inquirer.prompt(managerQuest).then(manaAnswers => {
-                    const manaData = new Manager(manaAnswers.name, manaAnswers.id, manaAnswers.email, manaAnswers.special)
-                    manaData.icon = '<i class="far fa-chart-bar fa-2x"></i>';
-                    manaData.special = `Office Number: ${manaData.special}`;
-                    manaData.role = answers.role;
-                    console.log(manaData);
-                    allMembers.push(manaData);
                     newMember();
                 });
                 break;
@@ -85,4 +87,4 @@ function createHTML(allMembers) {
 };
 
 
-buildTeam();
+makeManager();
