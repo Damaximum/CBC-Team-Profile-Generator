@@ -21,7 +21,10 @@ function buildTeam() {
         switch (answers.role) {
             case 'Engineer':
                 inquirer.prompt(engineerQuest).then(engiAnswers => {
-                    const engiData = new Engineer(engiAnswers.name, engiAnswers.id, engiAnswers.email, engiAnswers.github)
+                    const engiData = new Engineer(engiAnswers.name, engiAnswers.id, engiAnswers.email, engiAnswers.special)
+                    engiData.icon = '<i class="fas fa-glasses fa-2x"></i>';
+                    engiData.special = `Github: ${engiAnswers.special}`;
+                    engiData.role = answers.role;
                     console.log(engiData);
                     allMembers.push(engiData);
                     newMember();
@@ -29,7 +32,10 @@ function buildTeam() {
                 break;
             case 'Intern':
                 inquirer.prompt(internQuest).then(internAnswers => {
-                    const internData = new Intern(internAnswers.name, internAnswers.id, internAnswers.email, internAnswers.school)
+                    const internData = new Intern(internAnswers.name, internAnswers.id, internAnswers.email, internAnswers.special)
+                    internData.icon = '<i class="fas fa-eye fa-2x"></i>';
+                    internData.special = `School: ${internData.special}`;
+                    internData.role = answers.role;
                     console.log(internData);
                     allMembers.push(internData);
                     newMember();
@@ -37,7 +43,10 @@ function buildTeam() {
                 break;
             case 'Manager':
                 inquirer.prompt(managerQuest).then(manaAnswers => {
-                    const manaData = new Manager(manaAnswers.name, manaAnswers.id, manaAnswers.email, manaAnswers.officeNum)
+                    const manaData = new Manager(manaAnswers.name, manaAnswers.id, manaAnswers.email, manaAnswers.special)
+                    manaData.icon = '<i class="far fa-chart-bar fa-2x"></i>';
+                    manaData.special = `Office Number: ${manaData.special}`;
+                    manaData.role = answers.role;
                     console.log(manaData);
                     allMembers.push(manaData);
                     newMember();
